@@ -1,0 +1,30 @@
+﻿# Web Scraping
+google-play-scraper==1.2.7
+
+# Data Processing
+pandas==2.2.0
+numpy==1.26.0
+
+# Sentiment Analysis (Hugging Face Transformers)
+transformers==4.38.0
+torch==2.2.0  # PyTorch for transformers
+torchvision==0.17.0
+torchaudio==2.2.0
+
+# NLP for Text Processing
+spacy==3.7.0
+nltk==3.8.1
+scikit-learn==1.4.0
+
+# Visualization
+matplotlib==3.8.0
+seaborn==0.13.0
+wordcloud==1.9.0
+
+# Database
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.25
+
+# Utilities
+python-dotenv==1.0.0  # For environment variables
+tqdm==4.66.0  # For progress bars
