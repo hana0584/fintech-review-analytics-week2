@@ -1,55 +1,38 @@
 import pandas as pd
-from src.sentiment import SentimentAnalyzer
-from src.thematic import extract_keywords_tfidf, assign_themes, perform_topic_modeling
+from sentiment import analyze_reviews_with_vader
+from thematic import extract_keywords_tfidf, assign_themes
 
 def run_full_analysis():
-    """
-    Run complete sentiment and thematic analysis pipeline
-    """
-    print("🚀 Starting Full Analysis Pipeline")
-    print("=" * 50)
-    
-    
-    df = pd.read_csv('data/cleaned_reviews.csv')
-    print(f"Loaded {len(df)} reviews")
-    
-
-    print("\n Step 1: Sentiment Analysis")
-    analyzer = SentimentAnalyzer()
-    sentiments, scores = analyzer.analyze_batch(df['review'].tolist())
+    print("Starting Full Analysis Pipeline")
+    try:
+        df = pd.read_csv('data/cleaned_reviews.csv')
+        print(f"Loaded {len(df)} reviews")
+    except FileNotFoundError:
+        print("data/cleaned_reviews.csv not found. Run src/preprocess.py first.")
+        return None
+    print("Step 1: Sentiment Analysis")
+    sentiments, scores = analyze_reviews_with_vader(df)
     df['sentiment_label'] = sentiments
     df['sentiment_score'] = scores
-    
-   
-    print("\nStep 2: Thematic Analysis")
+    print("Step 2: Thematic Analysis")
     df = assign_themes(df)
-    
-   
     df.to_csv('data/analyzed_reviews.csv', index=False)
-    print("\n Results saved to data/analyzed_reviews.csv")
-    
-    print("\nSummary Statistics")
-    print("-" * 30)
-    
-   
+    print("Results saved to data/analyzed_reviews.csv")
+    print("Summary Statistics")
     sentiment_by_bank = pd.crosstab(df['bank'], df['sentiment_label'])
-    print("\nSentiment by Bank:")
     print(sentiment_by_bank)
-    
-   
     theme_by_bank = pd.crosstab(df['bank'], df['identified_theme'])
-    print("\nTheme by Bank:")
     print(theme_by_bank)
-    
-    print("\n🔑 Top Keywords per Bank")
-    print("-" * 30)
+    print("Top Keywords per Bank")
     for bank in df['bank'].unique():
-        keywords = extract_keywords_tfidf(df, bank, n_keywords=8)
-        print(f"\n{bank}:")
-        for kw, score in keywords:
-            print(f"  - {kw} ({score:.3f})")
-    
+        keywords = extract_keywords_tfidf(df, bank, n_keywords=5)
+        print(f"{bank}:")
+        if keywords:
+            for kw, score in keywords:
+                print(f"  {kw} ({score:.3f})")
+        else:
+            print("  (no keywords)")
     return df
 
 if __name__ == "__main__":
-    df = run_full_analysis()
+    run_full_analysis()
