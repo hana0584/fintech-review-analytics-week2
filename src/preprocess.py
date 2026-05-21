@@ -13,7 +13,7 @@ def clean_text(text):
    
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
     
-    text = re.sub(r'[^a-zA-Z0-9\s\.\!\?\']', '', text)
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text) 
     
     text = ' '.join(text.split())
     return text
