@@ -4,3 +4,8 @@ data/
 *.db
 .env
 .env
+venv/
+data/
+*.csv
+*.db
+.env
